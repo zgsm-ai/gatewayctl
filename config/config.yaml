@@ -1,0 +1,26 @@
+env: local
+mode: debug
+http:
+  host: 0.0.0.0
+  port: 8081
+data:
+  db:
+    postgres:
+      url: "host=127.0.0.1 user=keycloak password=sf2025~SHENMA dbname=gateway port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+      log_file_name: "/tmp/logs/sql.log"
+      log_level: warn
+      max_idle_connections: 10
+      max_open_connections: 100
+log:
+  log_level: warn
+  encoding: console           # json or console
+  log_file_name: "./logs/server.log"
+  max_backups: 30
+  max_age: 1
+  max_size: 1024
+  compress: true
+gateway:
+  apisix:
+    url: http://127.0.0.1:9180/apisix/admin/routes
+    token: edd1c9f034335f136f87ad84b625c8f1
+    prefix: /plugins
