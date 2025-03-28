@@ -16,7 +16,7 @@ type upstream struct {
 	Nodes map[string]int `json:"nodes"`
 }
 
-type addRouterRequest struct {
+type newRouterRequest struct {
 	Uri      string   `json:"uri"`
 	Upstream upstream `json:"upstream"`
 }
@@ -31,7 +31,7 @@ func AddRouterToGateway(partUri, upstreamAddr string) (string, error) {
 	}
 
 	uri := conf.Prefix + "/" + partUri
-	reqBody := addRouterRequest{
+	reqBody := newRouterRequest{
 		Uri: uri,
 		Upstream: upstream{
 			Type: "roundrobin",

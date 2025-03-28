@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"fmt"
+	"sync"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -11,8 +13,13 @@ import (
 	"github.com/zgsm-ai/gatewayctl/internal/pkg/logger"
 )
 
+var (
+	db   *gorm.DB
+	once sync.Once
+)
+
 // New creates a new gorm db instance with the given options.
-func NewDB() (*gorm.DB, error) {
+func newDB() (*gorm.DB, error) {
 	dbConf := config.App.Data.Database.Postgres
 	zapLogger := zapgorm2.New(logger.NewZapLogger(logger.NewOptsFromConfig()))
 	zapLogger.SetAsDefault()
@@ -37,6 +44,19 @@ func NewDB() (*gorm.DB, error) {
 
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	return db, nil
+}
+
+func GetDBInstance() (*gorm.DB, error) {
+	var err error
+	once.Do(func() {
+		db, err = newDB()
+	})
+
+	if db == nil || err != nil {
+		return nil, fmt.Errorf("failed to get db instance, error: %w", err)
+	}
 
 	return db, nil
 }

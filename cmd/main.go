@@ -17,7 +17,7 @@ func main() {
 	config.InitConfig(*envConf)
 	logger.InitLogger(logger.NewOptsFromConfig())
 
-	db, err := postgres.NewDB()
+	db, err := postgres.GetDBInstance()
 	if err != nil {
 		panic(err)
 	}
